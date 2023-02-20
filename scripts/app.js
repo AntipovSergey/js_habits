@@ -1,7 +1,8 @@
 'use strict';
 
 let habits = [];
-const HABIT_KEY = 'HABBIT_KEY';
+const HABIT_KEY = 'HABIT_KEY';
+let globalActiveHabitId;
 
 /* Page */
 
@@ -79,7 +80,7 @@ function rerenderContent(activeHabit) {
 							<div class="habit__comment">
 								${days[day].comment}
 							</div>
-							<button class="habit__delete">
+							<button class="habit__delete" onclick="deleteDay(${day})">
 								<img src="./images/delete.svg" alt="Delete" />
 							</button>
 		`;
@@ -88,7 +89,22 @@ function rerenderContent(activeHabit) {
 	page.content.nextDay.innerText = `День ${days.length + 1}`;
 }
 
+function deleteDay(index) {
+	habits = habits.map(habit => {
+		if (habit.id === globalActiveHabitId) {
+			return {
+				...habit,
+				days: habit.days.filter((_, i) => i !== index),
+			};
+		}
+		return habit;
+	});
+	rerender(globalActiveHabitId);
+	saveData();
+}
+
 function rerender(activeHabitId) {
+	globalActiveHabitId = activeHabitId;
 	const activeHabit = habits.find(habit => habit.id === activeHabitId);
 	if (!activeHabit) {
 		return;
@@ -96,6 +112,31 @@ function rerender(activeHabitId) {
 	rerenderMenu(activeHabit);
 	rerenderHead(activeHabit);
 	rerenderContent(activeHabit);
+}
+
+/* Work with days */
+
+function addDays(event) {
+	event.preventDefault();
+	const form = event.target;
+	const data = new FormData(form);
+	const comment = data.get('comment');
+	form['comment'].classList.remove('error');
+	if (!comment) {
+		form['comment'].classList.add('error');
+	}
+	habits = habits.map(habit => {
+		if (habit.id === globalActiveHabitId) {
+			return {
+				...habit,
+				days: habit.days.concat([{ comment }]),
+			};
+		}
+		return habit;
+	});
+	rerender(globalActiveHabitId);
+	saveData();
+	form['comment'].value = '';
 }
 
 /* Init */
