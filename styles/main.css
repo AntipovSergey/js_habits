@@ -244,9 +244,9 @@ button:hover {
 	justify-content: center;
 }
 
-/* .cover_hidden {
+.cover_hidden {
 	display: none;
-} */
+}
 
 .popup {
 	position: relative;
@@ -265,9 +265,17 @@ button:hover {
 	position: absolute;
 	right: 15px;
 	top: 15px;
+	padding: 5px;
 	border: none;
+	outline: none;
+	border-radius: 5px;
 	background: none;
 	cursor: pointer;
+	transition: all ease-in-out 0.3s;
+}
+
+.popup__close:hover {
+	background-color: #e7ebff;
 }
 
 h2 {

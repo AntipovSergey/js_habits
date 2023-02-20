@@ -13,7 +13,7 @@
 				<img class="logo" src="./images/logo.svg" alt="Logo Habits App" />
 				<nav class="menu">
 					<div class="menu__list"></div>
-					<button class="menu__add">
+					<button class="menu__add" onclick="togglePopup()">
 						<img src="./images/add.svg" alt="Add logo" />
 					</button>
 				</nav>
@@ -77,10 +77,10 @@
 						>
 							Добавить
 						</button>
-						<button class="popup__close">
-							<img src="./images/close.svg" alt="Close" />
-						</button>
 					</form>
+					<button class="popup__close" onclick="togglePopup()">
+						<img src="./images/close.svg" alt="Close" />
+					</button>
 				</div>
 			</div>
 		</div>

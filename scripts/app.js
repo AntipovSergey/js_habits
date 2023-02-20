@@ -17,6 +17,9 @@ const page = {
 		daysContainer: document.getElementById('days'),
 		nextDay: document.querySelector('.habit__day'),
 	},
+	popup: {
+		popupCover: document.querySelector('.cover'),
+	},
 };
 
 /* Utils */
@@ -89,20 +92,6 @@ function rerenderContent(activeHabit) {
 	page.content.nextDay.innerText = `День ${days.length + 1}`;
 }
 
-function deleteDay(index) {
-	habits = habits.map(habit => {
-		if (habit.id === globalActiveHabitId) {
-			return {
-				...habit,
-				days: habit.days.filter((_, i) => i !== index),
-			};
-		}
-		return habit;
-	});
-	rerender(globalActiveHabitId);
-	saveData();
-}
-
 function rerender(activeHabitId) {
 	globalActiveHabitId = activeHabitId;
 	const activeHabit = habits.find(habit => habit.id === activeHabitId);
@@ -137,6 +126,26 @@ function addDays(event) {
 	rerender(globalActiveHabitId);
 	saveData();
 	form['comment'].value = '';
+}
+
+function deleteDay(index) {
+	habits = habits.map(habit => {
+		if (habit.id === globalActiveHabitId) {
+			return {
+				...habit,
+				days: habit.days.filter((_, i) => i !== index),
+			};
+		}
+		return habit;
+	});
+	rerender(globalActiveHabitId);
+	saveData();
+}
+
+/* Popup */
+
+function togglePopup() {
+	page.popup.popupCover.classList.toggle('cover_hidden');
 }
 
 /* Init */
