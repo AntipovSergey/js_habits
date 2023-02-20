@@ -19,6 +19,7 @@ const page = {
 	},
 	popup: {
 		popupCover: document.querySelector('.cover'),
+		iconFiled: document.querySelector('.popup__form input[name="icon"]'),
 	},
 };
 
@@ -146,6 +147,13 @@ function deleteDay(index) {
 
 function togglePopup() {
 	page.popup.popupCover.classList.toggle('cover_hidden');
+}
+
+function setIcon(content, icon) {
+	page.popup.iconFiled.value = icon;
+	const activeIcon = document.querySelector('.icon.icon_active');
+	activeIcon.classList.remove('icon_active');
+	content.classList.add('icon_active');
 }
 
 /* Init */
