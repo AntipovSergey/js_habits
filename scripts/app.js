@@ -37,6 +37,37 @@ function saveData() {
 	localStorage.setItem(HABIT_KEY, JSON.stringify(habits));
 }
 
+function resetForm(form, fields) {
+	for (const field of fields) {
+		form[field].value = '';
+	}
+}
+
+function validateForm(form, fields) {
+	const formData = new FormData(form);
+	const res = {};
+	for (const field of fields) {
+		const fieldValue = formData.get(field);
+		form[field].classList.remove('error');
+		if (!fieldValue) {
+			form[field].classList.add('error');
+		}
+		res[field] = fieldValue;
+	}
+	let isValid = true;
+	for (const field of fields) {
+		if (!res[field]) {
+			isValid = false;
+		}
+	}
+	if (!isValid) {
+		return;
+	}
+	return res;
+}
+
+/* Rerender */
+
 function rerenderMenu(activeHabit) {
 	for (const habit of habits) {
 		const existed = document.querySelector(`[menu-habit-id='${habit.id}']`);
@@ -109,24 +140,22 @@ function rerender(activeHabitId) {
 function addDays(event) {
 	event.preventDefault();
 	const form = event.target;
-	const data = new FormData(form);
-	const comment = data.get('comment');
-	form['comment'].classList.remove('error');
-	if (!comment) {
-		form['comment'].classList.add('error');
+	const data = validateForm(form, ['comment']);
+	if (!data) {
+		return;
 	}
 	habits = habits.map(habit => {
 		if (habit.id === globalActiveHabitId) {
 			return {
 				...habit,
-				days: habit.days.concat([{ comment }]),
+				days: habit.days.concat([{ comment: data.comment }]),
 			};
 		}
 		return habit;
 	});
+	resetForm(form, ['comment']);
 	rerender(globalActiveHabitId);
 	saveData();
-	form['comment'].value = '';
 }
 
 function deleteDay(index) {
@@ -154,6 +183,30 @@ function setIcon(content, icon) {
 	const activeIcon = document.querySelector('.icon.icon_active');
 	activeIcon.classList.remove('icon_active');
 	content.classList.add('icon_active');
+}
+
+function addHabit(event) {
+	event.preventDefault();
+	const form = event.target;
+	const data = validateForm(form, ['name', 'icon', 'target']);
+	if (!data) {
+		return;
+	}
+	const maxId = habits.reduce(
+		(acc, habit) => (acc > habit.id ? acc : habit.id),
+		0
+	);
+	habits.push({
+		id: maxId + 1,
+		name: data.name,
+		target: data.target,
+		icon: data.icon,
+		days: [],
+	});
+	resetForm(form, ['name', 'target']);
+	togglePopup();
+	saveData();
+	rerender(maxId + 1);
 }
 
 /* Init */
