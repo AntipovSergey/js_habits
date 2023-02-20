@@ -124,10 +124,10 @@ h1 {
 
 .progress__cover-bar {
 	position: absolute;
-	width: 50%;
 	height: 5px;
 	background-color: #5051f9;
 	border-radius: 4px;
+	transition: all ease-in-out 0.5s;
 }
 
 main {
